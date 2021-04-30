@@ -35,13 +35,13 @@ namespace DependencyInjection
             using IServiceScope serviceScope = services.CreateScope();
             IServiceProvider provider = serviceScope.ServiceProvider;
 
-            var transient = provider.GetRequiredService(typeof(IOperacaoTransient)) as IOperacaoTransient;
-            var scoped = provider.GetRequiredService(typeof(IOperacaoScoped)) as IOperacaoScoped;
-            var singleton = provider.GetRequiredService(typeof(IOperacaoSingleton)) as IOperacaoSingleton;
+            var transient = provider.GetRequiredService<IOperacaoTransient>();
+            var scoped = provider.GetRequiredService<IOperacaoScoped>();
+            var singleton = provider.GetRequiredService<IOperacaoSingleton>();
 
-            var transient2 = provider.GetRequiredService(typeof(IOperacaoTransient)) as IOperacaoTransient;
-            var scoped2 = provider.GetRequiredService(typeof(IOperacaoScoped)) as IOperacaoScoped;
-            var singleton2 = provider.GetRequiredService(typeof(IOperacaoSingleton)) as IOperacaoSingleton;
+            var transient2 = provider.GetRequiredService<IOperacaoTransient>();
+            var scoped2 = provider.GetRequiredService<IOperacaoScoped>();
+            var singleton2 = provider.GetRequiredService<IOperacaoSingleton>();
 
             Console.WriteLine($"{scope}transient - { transient.Id}");
             Console.WriteLine($"{scope}scoped - { scoped.Id}");
