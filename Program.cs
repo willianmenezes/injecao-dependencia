@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DependencyInjection.Generics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
@@ -19,9 +20,15 @@ namespace DependencyInjection
 
         static IHostBuilder CreateHostBuilder(string[] args) =>
            Host.CreateDefaultBuilder(args)
-               .ConfigureServices((_, services) => services.AddTransient<IOperacaoTransient, Operacao>()
-                                                           .AddScoped<IOperacaoScoped, Operacao>()
-                                                           .AddSingleton<IOperacaoSingleton, Operacao>());
+               .ConfigureServices((_, services) =>
+               {
+                   services.AddTransient<IOperacaoTransient, Operacao>()
+                         .AddScoped<IOperacaoScoped, Operacao>()
+                         .AddSingleton<IOperacaoSingleton, Operacao>();
+
+                   // configurando injeção com classes genéricas
+                   services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+               });
 
         static void VerificarTipoInjecaoDependencia(IServiceProvider services, string scope)
         {
@@ -30,8 +37,8 @@ namespace DependencyInjection
 
             var transient = provider.GetRequiredService(typeof(IOperacaoTransient)) as IOperacaoTransient;
             var scoped = provider.GetRequiredService(typeof(IOperacaoScoped)) as IOperacaoScoped;
-            var singleton = provider.GetRequiredService(typeof(IOperacaoSingleton)) as IOperacaoSingleton; 
-            
+            var singleton = provider.GetRequiredService(typeof(IOperacaoSingleton)) as IOperacaoSingleton;
+
             var transient2 = provider.GetRequiredService(typeof(IOperacaoTransient)) as IOperacaoTransient;
             var scoped2 = provider.GetRequiredService(typeof(IOperacaoScoped)) as IOperacaoScoped;
             var singleton2 = provider.GetRequiredService(typeof(IOperacaoSingleton)) as IOperacaoSingleton;
@@ -41,7 +48,7 @@ namespace DependencyInjection
             Console.WriteLine($"{scope}singleton - { singleton.Id}");
 
             Console.WriteLine("===========================================");
-            
+
             Console.WriteLine($"{scope}transient - { transient2.Id}");
             Console.WriteLine($"{scope}scoped - { scoped2.Id}");
             Console.WriteLine($"{scope}singleton - { singleton2.Id}");
